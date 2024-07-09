@@ -1,26 +1,26 @@
 ---
-title: Deploy your Astro Site to Render
-description: How to deploy your Astro site to the web using Render.
+title: Apni Astro Site ko Render par Deploy karein
+description: Kaise apni Astro site ko web par Render ka use karte hue deploy karein.
 type: deploy
 i18nReady: true
 ---
 import { Steps } from '@astrojs/starlight/components';
 
-You can deploy your Astro project to [Render](https://render.com/), a service to build websites with free TLS certificates, a global CDN, DDoS protection, private networks, and auto deploys from Git.
+Aap apne Astro project ko [Render](https://render.com/) par deploy kar sakte hain, jo ek service hai jismein free TLS certificates, global CDN, DDoS protection, private networks, aur Git se auto deploys hain.
 
-## How to deploy
+## Deploy kaise karein
 
 <Steps>
-1. Create a [render.com account](https://dashboard.render.com/) and sign in
+1. Ek [render.com account](https://dashboard.render.com/) banayein aur sign in karein
 
-2. Click the **New +** button from your dashboard and select **Static Site**
+2. Apne dashboard se **New +** button par click karein aur **Static Site** select karein
 
-3. Connect your [GitHub](https://github.com/) or [GitLab](https://about.gitlab.com/) repository or alternatively enter the public URL of a public repository
+3. Apne [GitHub](https://github.com/) ya [GitLab](https://about.gitlab.com/) repository ko connect karein ya phir ek public repository ka public URL enter karein
 
-4. Give your website a name, select the branch and specify the build command and publish directory
+4. Apni website ka naam dein, branch select karein aur build command aur publish directory specify karein
    - **build command:** `npm run build`
-   - **publish directory:** `dist`, for static sites; `dist/client` if you're using `server` or `hybrid` server-rendering modes.
-   - **Environment variables (advanced)**: By default, Render uses Node.js 14.17.0, but Astro [requires a higher version](/en/install-and-setup/#prerequisites). Add an environment variable with a **Variable key** of `NODE_VERSION` and a **Value** of  `v18.17.1` or `v20.3.0` or higher to tell Render to use a compatible Node.js version. Alternatively, add a [`.node-version`](https://render.com/docs/node-version) or [`.nvmrc`](https://render.com/docs/node-version) file to your project to specify a Node.js version.
+   - **publish directory:** `dist`, static sites ke liye; `dist/client` agar aap `server` ya `hybrid` server-rendering modes ka use kar rahe hain.
+   - **Environment variables (advanced)**: By default, Render Node.js 14.17.0 use karta hai, lekin Astro [ek higher version ki zaroorat hoti hai](/en/install-and-setup/#prerequisites). Ek environment variable add karein **Variable key** ke saath `NODE_VERSION` aur **Value** `v18.17.1` ya `v20.3.0` ya higher, taaki Render ek compatible Node.js version use kare. Ya phir apne project mein ek [`.node-version`](https://render.com/docs/node-version) ya [`.nvmrc`](https://render.com/docs/node-version) file add karein Node.js version specify karne ke liye.
 
-5. Click the **Create Static Site** button
+5. **Create Static Site** button par click karein
 </Steps>

@@ -1,18 +1,19 @@
----
-title: Keystatic & Astro
-description: Add content to your Astro project using Keystatic as a CMS
-type: cms
-service: Keystatic
-i18nReady: true
----
-import { Steps } from '@astrojs/starlight/components';
-import { FileTree } from '@astrojs/starlight/components';
-import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro';
+# Keystatic & Astro Integration Guide
 
-[Keystatic](https://keystatic.com/) is an open source, headless content-management system that allows you to structure your content and sync it with GitHub.
+## Introduction
 
-:::tip
-If you're starting a **new Astro + Keystatic project from scratch**, you can use the [Keystatic CLI](https://keystatic.com/docs/quick-start#keystatic-cli) to generate a new project in seconds:
+This guide will help you integrate [Keystatic](https://keystatic.com/), an open-source headless CMS, with your Astro project, allowing you to manage and sync your content with GitHub.
+
+## Prerequisites
+
+1. **Existing Astro Project**: Ensure your project has server-side rendering (SSR) with `output: 'hybrid'` or `output: 'server'` configured.
+2. **GitHub Account**: If you plan to sync data with GitHub, ensure you have a GitHub account with write permissions for the project repository.
+
+## Installation Steps
+
+### 1. Starting a New Project
+
+If you're starting fresh, use the Keystatic CLI to set up a new Astro project:
 
 <PackageManagerTabs>
   <Fragment slot="npm">
@@ -32,20 +33,11 @@ If you're starting a **new Astro + Keystatic project from scratch**, you can use
   </Fragment>
 </PackageManagerTabs>
 
-Select the Astro template, and you'll be ready to [deploy](#deploying-keystatic--astro)!
-:::
+Choose the Astro template to get started quickly.
 
-## Prerequisites
+### 2. Installing Dependencies
 
-- An existing Astro project [with server-side rendering (SSR) and `output: 'hybrid'` or `output: 'server'` configured](/en/guides/server-side-rendering/).
-
-:::note
-If you intend to sync Keystatic's data with GitHub, you will also need **a GitHub account with `write` permissions** on the repository for this project.
-:::
-
-## Installing dependencies
-
-Add both the Markdoc (for content entries) and the React (for the Keystatic Admin UI Dashboard) integrations to your Astro project, using the `astro add` command for your package manager.
+Add the necessary integrations for Markdoc and React:
 
 <PackageManagerTabs>
   <Fragment slot="npm">
@@ -65,7 +57,7 @@ Add both the Markdoc (for content entries) and the React (for the Keystatic Admi
   </Fragment>
 </PackageManagerTabs>
 
-You will also need two Keystatic packages:
+Then, install Keystatic packages:
 
 <PackageManagerTabs>
   <Fragment slot="npm">
@@ -85,32 +77,28 @@ You will also need two Keystatic packages:
   </Fragment>
 </PackageManagerTabs>
 
-## Adding the Astro integration
+### 3. Adding Keystatic Integration
 
-Add the Astro integration from `@keystatic/astro` in your Astro config file:
+Include the Keystatic integration in your Astro config file:
 
-```js  ins={6} ins=", keystatic()"
+```js
 // astro.config.mjs
-import { defineConfig } from 'astro/config'
+import { defineConfig } from 'astro/config';
+import react from '@astrojs/react';
+import markdoc from '@astrojs/markdoc';
+import keystatic from '@keystatic/astro';
 
-import react from '@astrojs/react'
-import markdoc from '@astrojs/markdoc'
-import keystatic from '@keystatic/astro'
-
-// https://astro.build/config
 export default defineConfig({
   integrations: [react(), markdoc(), keystatic()],
   output: 'hybrid',
-})
+});
 ```
 
-## Creating a Keystatic config file
+### 4. Creating a Keystatic Config File
 
-A Keystatic config file is required to define your content schema. This file will also allow you to connect a project to a specific GitHub repository (if you decide to do so).
+Define your content schema in `keystatic.config.ts`:
 
-Create a file called `keystatic.config.ts` in the root of the project and add the following code to define both your storage type (`local`) and a single content collection (`posts`):
-
-```ts {8-25}
+```ts
 // keystatic.config.ts
 import { config, fields, collection } from '@keystatic/core';
 
@@ -118,7 +106,6 @@ export default config({
   storage: {
     kind: 'local',
   },
-
   collections: {
     posts: collection({
       label: 'Posts',
@@ -136,62 +123,29 @@ export default config({
 });
 ```
 
-:::note[Already using content collections?]
-If you are already using [content collections](/en/guides/content-collections/#defining-collections) in your Astro project, then update the schema above to exactly match the collection(s) defined in your existing schema.
-:::
+### 5. Running Keystatic Locally
 
-Keystatic is now configured to manage your content based on your schema.
+Start your development server:
 
-## Running Keystatic locally
+```bash
+npm run dev
+```
 
-To launch your Keystatic Admin UI dashboard, start Astro's dev server:
+Visit `http://127.0.0.1:4321/keystatic` to access the Keystatic Admin UI.
 
-    ```bash
-    npm run dev
-    ```
+### 6. Creating a New Post
 
-Visit `http://127.0.0.1:4321/keystatic` in the browser to see the Keystatic Admin UI running.
+Use the Keystatic Admin UI to create a new post. This will generate a `.mdoc` file in your `src/content/posts` directory.
 
-## Creating a new post
+### 7. Rendering Keystatic Content
 
-<Steps>
-1. In the Keystatic Admin UI dashboard, click on the “Posts” collection.
+#### Displaying a Collection List
 
-2. Use the button to create a new post. Add the title "My First Post" and some content, then save the post.
-
-3. This post should now be visible from your "Posts" collection. You can view and edit your individual posts from this dashboard page.
-
-4. Return to view your Astro project files. You will now find a new `.mdoc` file inside the `src/content/posts` directory for this new post:
-    <FileTree title="Project Structure">
-    - src/
-      - content/
-        - posts/
-          - **my-first-post.mdoc**
-    </FileTree>
-
-5. Navigate to that file in your code editor and verify that you can see the Markdown content you entered. For example: 
-      ```markdown
-      ---
-      title: My First Post
-      ---
-      
-      This is my very first post. I am **super** excited!
-      ```
-</Steps>
-
-## Rendering Keystatic content
-
-Use Astro's Content Collections API to [query and display your posts and collections](/en/guides/content-collections/#querying-collections), just as you would in any Astro project.
-
-### Displaying a collection list
-
-The following example displays a list of each post title, with a link to an individual post page.
-
-```tsx {4}
+```tsx
 ---
-import { getCollection } from 'astro:content'
+import { getCollection } from 'astro:content';
 
-const posts = await getCollection('posts')
+const posts = await getCollection('posts');
 ---
 <ul>
   {posts.map(post => (
@@ -202,33 +156,26 @@ const posts = await getCollection('posts')
 </ul>
 ```
 
-### Displaying a single entry
+#### Displaying a Single Entry
 
-To display content from an individual post, you can import and use the `<Content />` component to [render your content to HTML](/en/guides/content-collections/#rendering-content-to-html):
-
-```tsx {4-5}
+```tsx
 ---
-import { getEntry } from 'astro:content'
+import { getEntry } from 'astro:content';
 
-const post = await getEntry('posts', 'my-first-post')
-const { Content } = await post.render()
+const post = await getEntry('posts', 'my-first-post');
+const { Content } = await post.render();
 ---
-
 <main>
   <h1>{post.data.title}</h1>
   <Content />
 </main>
-
 ```
 
-For more information on querying, filtering, displaying your collections content and more, see the full content [collections documentation](/en/guides/content-collections/).
-## Deploying Keystatic + Astro
+## Deployment
 
-To deploy your website, visit our [deployment guides](/en/guides/deploy/) and follow the instructions for your preferred hosting provider.
-
-You'll also probably want to [connect Keystatic to GitHub](https://keystatic.com/docs/connect-to-github) so you can manage content on the deployed instance of the project.
+Follow Astro's [deployment guides](https://astro.build/guides/deploy/) to deploy your project. Connect Keystatic to GitHub for content management on your deployed instance.
 
 ## Official Resources
 
-- Check out [the official Keystatic guide](https://keystatic.com/docs/installation-astro)
-- [Keystatic starter template](https://github.com/Thinkmill/keystatic/tree/main/templates/astro)
+- [Keystatic Documentation](https://keystatic.com/docs/installation-astro)
+- [Keystatic Starter Template](https://github.com/Thinkmill/keystatic/tree/main/templates/astro)
